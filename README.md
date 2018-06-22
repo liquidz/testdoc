@@ -1,4 +1,5 @@
 # testdoc
+[![Clojars Project](https://img.shields.io/clojars/v/testdoc.svg)](https://clojars.org/testdoc)
 
 Yet another doctest implementation in Clojure
 
