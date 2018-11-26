@@ -1,4 +1,6 @@
 # testdoc
+[![CircleCI](https://img.shields.io/circleci/project/github/liquidz/testdoc/master.svg)](https://circleci.com/gh/liquidz/testdoc)
+[![Dependencies Status](https://versions.deps.co/liquidz/testdoc/status.svg)](https://versions.deps.co/liquidz/testdoc)
 [![Clojars Project](https://img.shields.io/clojars/v/testdoc.svg)](https://clojars.org/testdoc)
 
 Yet another doctest implementation in Clojure
