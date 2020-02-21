@@ -1,5 +1,6 @@
 # testdoc
-[![CircleCI](https://img.shields.io/circleci/project/github/liquidz/testdoc/master.svg)](https://circleci.com/gh/liquidz/testdoc)
+[![GitHub Actions for test workflow](https://github.com/liquidz/testdoc/workflows/test/badge.svg)](https://github.com/liquidz/testdoc/actions?query=workflow%3Atest)
+[![GitHub Actions for lint workflow](https://github.com/liquidz/testdoc/workflows/lint/badge.svg)](https://github.com/liquidz/testdoc/actions?query=workflow%3Alint)
 [![Dependencies Status](https://versions.deps.co/liquidz/testdoc/status.svg)](https://versions.deps.co/liquidz/testdoc)
 [![Clojars Project](https://img.shields.io/clojars/v/testdoc.svg)](https://clojars.org/testdoc)
 
