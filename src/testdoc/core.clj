@@ -1,15 +1,19 @@
 (ns testdoc.core
-  (:require [clojure.string :as str]
-            [clojure.test :as t]
-            [clojure.walk :as walk]))
+  (:require
+   [clojure.string :as str]
+   [clojure.test :as t]
+   [clojure.walk :as walk]))
 
-(defn- fn?' [x]
+(defn- fn?'
+  [x]
   (fn? (cond-> x (var? x) deref)))
 
-(defn- form-line? [s]
+(defn- form-line?
+  [s]
   (str/starts-with? s "=>"))
 
-(defn- join-forms [lines]
+(defn- join-forms
+  [lines]
   (:result
    (reduce (fn [{:keys [tmp result] :as m} line]
              (cond
@@ -22,7 +26,8 @@
                :else m))
            {:tmp "" :result []} lines)))
 
-(defn- parse-doc [doc]
+(defn- parse-doc
+  [doc]
   (-> (str/trim doc)
       (str/split #"[\r\n]+")
       (->> (map str/trim)
@@ -32,18 +37,21 @@
            (map (comp read-string str/trim))
            (partition 2))))
 
-(defn- replace-publics [x publics]
+(defn- replace-publics
+  [x publics]
   (cond
     (symbol? x) (get publics x x)
     (sequential? x) (walk/postwalk-replace publics x)
     :else x))
 
-(defn- get-message [form original-expected is-expected-fn?]
+(defn- get-message
+  [form original-expected is-expected-fn?]
   (if is-expected-fn?
     (str "(true? (" original-expected " " form "))")
     (str "(= " form " " original-expected ")")))
 
-(defn testdoc* [msg doc publics]
+(defn testdoc*
+  [msg doc publics]
   (let [tests (parse-doc doc)]
     (reduce (fn [result [form original-expected]]
               (let [actual (-> form (replace-publics publics) eval)
@@ -59,7 +67,8 @@
                        :actual actual})))
             [] tests)))
 
-(defn testdoc [msg var]
+(defn testdoc
+  [msg var]
   (let [{ns' :ns doc :doc} (meta var)
         publics (ns-publics ns')]
     (testdoc* msg doc publics)))

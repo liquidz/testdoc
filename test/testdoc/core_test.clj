@@ -1,7 +1,8 @@
 (ns testdoc.core-test
-  (:require [clojure.test :as t]
-            [testdoc.core :as sut]
-            [fudje.sweet :as fj]))
+  (:require
+   [clojure.test :as t]
+   [esac.core :as esac]
+   [testdoc.core :as sut]))
 
 (t/deftest join-forms-test
   (t/are [x y] (= x (#'sut/join-forms y))
@@ -33,17 +34,16 @@
 
 (t/deftest testdoc-test
   (t/is
-   (compatible
+   (esac/match?
     (sut/testdoc nil #'success-test-func)
-    (fj/contains [{:type :pass :expected 6 :actual 6}
-                  {:type :pass :expected 10 :actual 10}]
-                 :in-any-order)))
+    ^:in-any-order [{:type :pass :expected _ :actual 6}
+                    {:type :pass :expected 10 :actual 10}]))
 
   (t/is
-   (compatible
+   (esac/match?
     (sut/testdoc nil #'partial-success-test-func)
-    (fj/contains [{:type :pass :expected 6 :actual 6}
-                  {:type :fail :expected 11 :actual 10}]))))
+    [{:type :pass :expected 6 :actual 6}
+     {:type :fail :expected 11 :actual 10}])))
 
 (defn plus
   "Add a and b
