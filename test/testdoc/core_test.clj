@@ -7,7 +7,7 @@
 (t/deftest join-forms-test
   (t/are [x y] (= x (#'sut/join-forms y))
     ["a" "b"]         ["=> a" "b"]
-    ["a b" "c"]       ["=> a" "=> b" "c"]
+    ["a\nb" "c"]       ["=> a" "=> b" "c"]
     ["a" "b" "c" "d"] ["=> a" "b" "=> c" "d"]
     []                ["=> a"]
     ["a" "b"]         ["=> a" "b" "=> c"]

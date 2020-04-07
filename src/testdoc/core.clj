@@ -18,7 +18,7 @@
    (reduce (fn [{:keys [tmp result] :as m} line]
              (cond
                (form-line? line)
-               (assoc m :tmp (str/trim (str tmp " " (str/trim (subs line 2)))))
+               (assoc m :tmp (str/trim (str tmp "\n" (str/trim (subs line 2)))))
 
                (seq tmp)
                (assoc m :tmp "" :result (conj result tmp line))
