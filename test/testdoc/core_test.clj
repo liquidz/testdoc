@@ -45,6 +45,12 @@
     [{:type :pass :expected 6 :actual 6}
      {:type :fail :expected 11 :actual 10}])))
 
+(t/deftest testdoc-unsupported-test
+  (t/is
+   (esac/match?
+    (sut/testdoc nil 123)
+    [{:type :fail :message #"^Unsupported document:"}])))
+
 (defn plus
   "Add a and b
 
@@ -58,3 +64,12 @@
 
 (t/deftest plus-test
   (t/is (testdoc #'plus)))
+
+(t/deftest plus-string-test
+  (t/is (testdoc "=> (require '[testdoc.core-test :as ct])
+                  nil
+                  => (ct/plus 1 2)
+                  3
+                  => (ct/plus 2
+                  =>          3)
+                  5")))
