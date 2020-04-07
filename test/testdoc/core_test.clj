@@ -1,5 +1,6 @@
 (ns testdoc.core-test
   (:require
+   [clojure.java.io :as io]
    [clojure.test :as t]
    [esac.core :as esac]
    [testdoc.core :as sut]))
@@ -76,3 +77,6 @@
                   => (ct/plus 2
                   =>          3)
                   5")))
+
+(t/deftest README-test
+  (t/is (testdoc (slurp (io/file "README.md")))))
