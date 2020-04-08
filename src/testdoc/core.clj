@@ -52,9 +52,12 @@
 
 (defn testdoc*
   [msg doc publics]
-  (let [tests (parse-doc doc)]
+  (let [tests (parse-doc doc)
+        last-actual (atom nil)]
     (reduce (fn [result [form original-expected]]
-              (let [actual (-> form (replace-publics publics) eval)
+              (let [publics (assoc publics '*1 @last-actual)
+                    actual (-> form (replace-publics publics) eval)
+                    _ (reset! last-actual actual)
                     expected (-> original-expected (replace-publics publics) eval)
                     is-expected-fn? (fn?' expected)
                     pass? (if is-expected-fn?

@@ -20,7 +20,9 @@
   6
   => (+ 1 2
   =>    3 4)
-  10"
+  10
+  => (inc *1)
+  11"
   [])
 
 (defn- partial-success-test-func
@@ -37,7 +39,8 @@
    (esac/match?
     (sut/testdoc nil #'success-test-func)
     ^:in-any-order [{:type :pass :expected _ :actual 6}
-                    {:type :pass :expected 10 :actual 10}]))
+                    {:type :pass :expected 10 :actual 10}
+                    {:type :pass :expected 11 :actual 11}]))
 
   (t/is
    (esac/match?
