@@ -70,7 +70,8 @@
                        :actual actual})))
             [] tests)))
 
-(defn testdoc [msg x]
+(defn testdoc
+  [msg x]
   (cond
     (var? x)
     (let [{ns' :ns doc :doc} (meta x)
