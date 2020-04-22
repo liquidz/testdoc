@@ -70,25 +70,22 @@
                        :actual actual})))
             [] tests)))
 
-(defmulti testdoc
-  (fn [_msg x] (type x)))
+(defn testdoc [msg x]
+  (cond
+    (var? x)
+    (let [{ns' :ns doc :doc} (meta x)
+          publics (ns-publics ns')]
+      (testdoc* msg doc publics))
 
-(defmethod testdoc :default
-  [_msg x]
-  [{:type :fail
-    :message (format "Unsupported document: %s" x)}])
+    (string? x)
+    (testdoc* msg x {})
 
-(defmethod testdoc clojure.lang.Var
-  [msg var]
-  (let [{ns' :ns doc :doc} (meta var)
-        publics (ns-publics ns')]
-    (testdoc* msg doc publics)))
-
-(defmethod testdoc String
-  [msg doc]
-  (testdoc* msg doc {}))
+    :else
+    [{:type :fail
+      :message (format "Unsupported document: %s" x)}]))
 
 (defmethod t/assert-expr 'testdoc
   [msg [_ form]]
   `(doseq [result# (testdoc ~msg ~form)]
      (t/do-report result#)))
+
