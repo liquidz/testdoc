@@ -8,8 +8,7 @@
   {:1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
    :1.10 {:dependencies [[org.clojure/clojure "1.10.0"]]}
    :1.10.1 {:dependencies [[org.clojure/clojure "1.10.1"]]}
-   :test {:dependencies [[esac "0.1.0-SNAPSHOT"]]}
-   :dev [:test {:dependencies [[org.clojure/clojure "1.10.1"]]}]}
+   :dev {:dependencies [[org.clojure/clojure "1.10.1"]]}}
 
   :aliases
-  {"test-all" ["with-profile" "test,1.9:test,1.10:test,1.10.1" "test"]})
+  {"test-all" ["with-profile" "1.9:1.10:1.10.1" "test"]})

@@ -2,7 +2,6 @@
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
-   [esac.core :as esac]
    [testdoc.core :as sut]))
 
 (t/deftest join-forms-test
@@ -36,24 +35,24 @@
   [])
 
 (t/deftest testdoc-test
-  (t/is
-   (esac/match?
-    (sut/testdoc nil #'success-test-func)
-    ^:in-any-order [{:type :pass :expected _ :actual 6}
-                    {:type :pass :expected 10 :actual 10}
-                    {:type :pass :expected 11 :actual 11}]))
+  (t/is (= #{{:type :pass :expected 6 :actual 6}
+             {:type :pass :expected 10 :actual 10}
+             {:type :pass :expected 11 :actual 11}}
+           (->> (sut/testdoc nil #'success-test-func)
+                (map #(select-keys % [:type :expected :actual]))
+                set)))
 
-  (t/is
-   (esac/match?
-    (sut/testdoc nil #'partial-success-test-func)
-    [{:type :pass :expected 6 :actual 6}
-     {:type :fail :expected 11 :actual 10}])))
+  (t/is (= #{{:type :pass :expected 6 :actual 6}
+             {:type :fail :expected 11 :actual 10}}
+           (->> (sut/testdoc nil #'partial-success-test-func)
+                (map #(select-keys % [:type :expected :actual]))
+                set))))
 
 (t/deftest testdoc-unsupported-test
-  (t/is
-   (esac/match?
-    (sut/testdoc nil 123)
-    [{:type :fail :message #"^Unsupported document:"}])))
+  (let [[result :as results] (sut/testdoc nil 123)]
+    (t/is (= 1 (count results)))
+    (t/is (= :fail (:type result)))
+    (t/is (re-seq #"^Unsupported document:" (:message result)))))
 
 (defn plus
   "Add a and b
