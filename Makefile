@@ -10,13 +10,13 @@ bb:
 	curl -s https://raw.githubusercontent.com/borkdude/babashka/master/install -o .install-babashka
 	bash ./.install-babashka $(PWD)
 
-test-clj:
-	lein test-all
-
 test-bb: bb
 	./bb --classpath "src:test" -m bb-test-runner
 
-test: test-clj test-bb
+test:
+	lein test-all
+
+test-all: test test-bb
 
 clean:
 	rm -rf bb
