@@ -1,4 +1,4 @@
-(defproject testdoc "1.2.0"
+(defproject testdoc "1.3.0"
   :description "Yet another doctest implementation in Clojure"
   :url "https://github.com/liquidz/testdoc"
   :license {:name "Eclipse Public License"
