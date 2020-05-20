@@ -11,6 +11,8 @@ Yet another doctest implementation in Clojure
 
 testdoc extends `clojure.test/is` macro.
 
+### REPL style
+
 ```clojure
 => (require '[clojure.test :as t]
 =>          'testdoc.core)
@@ -22,32 +24,57 @@ nil
 =>   => (myplus 1 2)
 =>   3
 =>   => (myplus 2
-=>   =>       3)
+=>   =>         3)
 =>   5"
 =>   [a b]
 =>   (+ a b))
-any?
+var?
 
 => (t/deftest myplus-test
 =>   (t/is (testdoc #'myplus)))
-any?
+var?
 
 => (t/test-var *1)
 nil
 ```
 
-### Testing external documents
+### Code-first style
 
 ```clojure
-=> (require '[clojure.java.io :as io])
-nil
+(defn mymulti
+  "Multiply a and b
 
-=> (t/deftest external-document-test
-=>   (t/is (testdoc (slurp (io/file "test/resources/README.adoc")))))
-any?
+  (mymulti 1 2)
+  ;; => 2
+  (mymulti 2
+           3)
+  ;; => 6"
+  [a b]
+  (* a b))
+;; => var?
 
-=> (t/test-var *1)
-nil
+(t/deftest mymulti-test
+  (t/is (testdoc #'mymulti)))
+;; => var?
+
+(t/test-var *1)
+;; => nil
+```
+
+### Testing external documents
+
+This document is tested by this library, of course!
+
+```clojure
+(require '[clojure.java.io :as io])
+;; => nil
+
+(t/deftest external-document-test
+  (t/is (testdoc (slurp (io/file "test/resources/README.adoc")))))
+;; => var?
+
+(t/test-var *1)
+;; => nil
 ```
 
 ## Other works
