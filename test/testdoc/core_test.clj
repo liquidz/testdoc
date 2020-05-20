@@ -4,16 +4,7 @@
    [clojure.test :as t]
    [testdoc.core :as sut]))
 
-(t/deftest join-forms-test
-  (t/are [x y] (= x (#'sut/join-forms y))
-    ["a" "b"]         ["=> a" "b"]
-    ["a\nb" "c"]       ["=> a" "=> b" "c"]
-    ["a" "b" "c" "d"] ["=> a" "b" "=> c" "d"]
-    []                ["=> a"]
-    ["a" "b"]         ["=> a" "b" "=> c"]
-    ["a" "b"]         ["=> a" "b" "c"]))
-
-(defn- success-test-func
+(defn- repl-styled-success-test-func
   "foo bar
 
   => (+ 1 2 3)
@@ -21,32 +12,75 @@
   => (+ 1 2
   =>    3 4)
   10
+  => *1
+  10
   => (inc *1)
   11"
   [])
 
-(defn- partial-success-test-func
+(defn- code-first-styled-success-test-func
+  "foo bar
+
+  (+ 1 2 3)
+  ;; => 6
+
+  (+ 1 2
+     3 4)
+  ;; => 10
+  *1
+  ;; => 10
+  (inc *1)
+  ;; => 11"
+  [])
+
+(defn- repl-styled-partial-success-test-func
   "foo bar
 
   => (+ 1 2 3)
   6
   => (+ 1 2 3 4)
-  11"
+  999"
+  [])
+
+(defn- code-first-styled-partial-success-test-func
+  "foo bar
+
+  (+ 1 2 3)
+  ;; => 6
+  (+ 1 2 3 4)
+  ;; => 999"
   [])
 
 (t/deftest testdoc-test
-  (t/is (= #{{:type :pass :expected 6 :actual 6}
-             {:type :pass :expected 10 :actual 10}
-             {:type :pass :expected 11 :actual 11}}
-           (->> (sut/testdoc nil #'success-test-func)
-                (map #(select-keys % [:type :expected :actual]))
-                set)))
+  (t/testing "repl style"
+    (t/is (= [{:type :pass :expected 6 :actual 6}
+              {:type :pass :expected 10 :actual 10}
+              {:type :pass :expected 10 :actual 10}
+              {:type :pass :expected 11 :actual 11}]
+             (->> (sut/testdoc nil #'repl-styled-success-test-func)
+                  (map #(select-keys % [:type :expected :actual]))
+                  (sort-by :expected))))
 
-  (t/is (= #{{:type :pass :expected 6 :actual 6}
-             {:type :fail :expected 11 :actual 10}}
-           (->> (sut/testdoc nil #'partial-success-test-func)
-                (map #(select-keys % [:type :expected :actual]))
-                set))))
+    (t/is (= [{:type :pass :expected 6 :actual 6}
+              {:type :fail :expected 999 :actual 10}]
+             (->> (sut/testdoc nil #'repl-styled-partial-success-test-func)
+                  (map #(select-keys % [:type :expected :actual]))
+                  (sort-by :expected)))))
+
+  (t/testing "code-first style"
+    (t/is (= [{:type :pass :expected 6 :actual 6}
+              {:type :pass :expected 10 :actual 10}
+              {:type :pass :expected 10 :actual 10}
+              {:type :pass :expected 11 :actual 11}]
+             (->> (sut/testdoc nil #'code-first-styled-success-test-func)
+                  (map #(select-keys % [:type :expected :actual]))
+                  (sort-by :expected))))
+
+    (t/is (= [{:type :pass :expected 6 :actual 6}
+              {:type :fail :expected 999 :actual 10}]
+             (->> (sut/testdoc nil #'code-first-styled-partial-success-test-func)
+                  (map #(select-keys % [:type :expected :actual]))
+                  (sort-by :expected))))))
 
 (t/deftest testdoc-unsupported-test
   (let [[result :as results] (sut/testdoc nil 123)]
