@@ -111,5 +111,9 @@
                   =>          3)
                   5")))
 
+(t/deftest debug-test
+  (with-out-str
+    (t/is (testdoc #'sut/debug))))
+
 (t/deftest README-test
   (t/is (testdoc (slurp (io/file "README.md")))))

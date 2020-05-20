@@ -77,3 +77,18 @@
   `(doseq [result# (testdoc ~msg ~form)]
      (t/do-report result#)))
 
+(defn debug
+  "Print parsed codes and expected results
+
+  ```
+  => (debug \"=> (+ 1 2)\\n3\")
+  nil
+
+  => (debug \"(+ 1 2)\\n;; => 3\")
+  nil
+  ```"
+  [x]
+  (doseq [[x y] (some-> x extract-document first parse-doc)]
+    (println "----")
+    (println "CODE     >>" (pr-str x))
+    (println "EXPECTED >>" (pr-str y))))
