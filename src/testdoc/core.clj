@@ -2,40 +2,18 @@
   (:require
    [clojure.string :as str]
    [clojure.test :as t]
-   [clojure.walk :as walk]))
+   [clojure.walk :as walk]
+   [testdoc.style.code-first :as style.code-first]
+   [testdoc.style.repl :as style.repl]))
 
 (defn- fn?'
   [x]
   (fn? (cond-> x (var? x) deref)))
 
-(defn- form-line?
-  [s]
-  (str/starts-with? s "=>"))
-
-(defn- join-forms
-  [lines]
-  (:result
-   (reduce (fn [{:keys [tmp result] :as m} line]
-             (cond
-               (form-line? line)
-               (assoc m :tmp (str/trim (str tmp "\n" (str/trim (subs line 2)))))
-
-               (seq tmp)
-               (assoc m :tmp "" :result (conj result tmp line))
-
-               :else m))
-           {:tmp "" :result []} lines)))
-
 (defn- parse-doc
   [doc]
-  (-> (str/trim doc)
-      (str/split #"[\r\n]+")
-      (->> (map str/trim)
-           (remove str/blank?)
-           (drop-while (complement form-line?))
-           join-forms
-           (map (comp read-string str/trim))
-           (partition 2))))
+  (concat (style.repl/parse-doc doc)
+          (style.code-first/parse-doc doc)))
 
 (defn- replace-publics
   [x publics]
@@ -70,18 +48,27 @@
                        :actual actual})))
             [] tests)))
 
-(defn testdoc
-  [msg x]
+(defn extract-document
+  [x]
   (cond
     (var? x)
     (let [{ns' :ns doc :doc} (meta x)
           publics (ns-publics ns')]
-      (testdoc* msg doc publics))
+      [doc publics])
 
     (string? x)
-    (testdoc* msg x {})
+    [x {}]
 
     :else
+    nil))
+
+(defn testdoc
+  [msg x]
+  (if-let [[doc publics] (extract-document x)]
+    (if (str/blank? doc)
+      [{:type :fail
+        :message (format "No document: %s" x)}]
+      (testdoc* msg doc publics))
     [{:type :fail
       :message (format "Unsupported document: %s" x)}]))
 
@@ -90,3 +77,18 @@
   `(doseq [result# (testdoc ~msg ~form)]
      (t/do-report result#)))
 
+(defn debug
+  "Print parsed codes and expected results
+
+  ```
+  => (debug \"=> (+ 1 2)\\n3\")
+  nil
+
+  => (debug \"(+ 1 2)\\n;; => 3\")
+  nil
+  ```"
+  [x]
+  (doseq [[x y] (some-> x extract-document first parse-doc)]
+    (println "----")
+    (println "CODE     >>" (pr-str x))
+    (println "EXPECTED >>" (pr-str y))))
