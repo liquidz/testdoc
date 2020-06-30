@@ -32,7 +32,7 @@
   [msg doc publics]
   (let [tests (parse-doc doc)
         last-actual (atom nil)]
-    (reduce (fn [result [form original-expected]]
+    (reduce (fn [result [form original-expected :as test]]
               (let [publics (assoc publics '*1 @last-actual)
                     actual (-> form (replace-publics publics) eval)
                     _ (reset! last-actual actual)
@@ -40,10 +40,12 @@
                     is-expected-fn? (fn?' expected)
                     pass? (if is-expected-fn?
                             (expected actual)
-                            (= actual expected))]
+                            (= actual expected))
+                    line-number (-> test meta :line)]
                 (conj result
                       {:type (if pass? :pass :fail)
-                       :message (or msg (get-message form original-expected is-expected-fn?))
+                       :message (cond-> (or msg (get-message form original-expected is-expected-fn?))
+                                  line-number (str ", [line: " line-number "]"))
                        :expected original-expected
                        :actual actual})))
             [] tests)))
