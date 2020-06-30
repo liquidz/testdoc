@@ -1,17 +1,17 @@
 (ns testdoc.style.code-first
   (:require
-   [clojure.string :as str]))
+   [testdoc.string :as str]))
 
 (def ^:private output-line-re #"^;+ ?=>")
 
 (defn- output-line?
   [s]
-  (some? (re-seq output-line-re s)))
+  (some? (str/re-seq output-line-re s)))
 
 (defn- calc-level
   [s]
-  (- (count (filter #{\(} s))
-     (count (filter #{\)} s))))
+  (- (count (filter #{\(} (str/seq s)))
+     (count (filter #{\)} (str/seq s)))))
 
 (defn- join-forms
   [lines]
@@ -40,11 +40,13 @@
 
 (defn parse-doc
   [doc]
-  (-> (str/trim doc)
-      (str/split #"[\r\n]+")
+  (-> (str/new-string doc)
+      (str/split-lines)
       (->> (map str/trim)
            (remove str/blank?)
-           join-forms
-           (map (comp read-string str/trim))
+           (join-forms)
+           (map #(let [x (-> % str/trim str/to-str read-string)]
+                   (cond-> x (instance? clojure.lang.IObj x) (with-meta (meta %)))))
            (partition 2)
-           reverse)))
+           (map #(with-meta % (meta (first %))))
+           (reverse))))
