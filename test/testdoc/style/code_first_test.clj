@@ -21,5 +21,5 @@
 (t/deftest parse-doc-with-meta-test
   (let [ret (sut/parse-doc (lines ["" "a" ";; => 6" "c" ";; => :d"]))]
     (t/is (= '[[a 6] [c :d]] ret))
-    (t/is (= {:line 2} (meta (first ret))))
-    (t/is (= {:line 4} (meta (second ret))))))
+    (t/is (= 2 (-> ret first meta :testdoc.string/line)))
+    (t/is (= 4 (-> ret second meta :testdoc.string/line)))))

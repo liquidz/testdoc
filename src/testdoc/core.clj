@@ -41,7 +41,7 @@
                     pass? (if is-expected-fn?
                             (expected actual)
                             (= actual expected))
-                    line-number (-> test meta :line)]
+                    line-number (-> test meta :testdoc.string/line)]
                 (conj result
                       {:type (if pass? :pass :fail)
                        :message (cond-> (or msg (get-message form original-expected is-expected-fn?))

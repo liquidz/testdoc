@@ -25,7 +25,7 @@
   [ms]
   (let [m (meta ms)]
     (->> (str/split-lines (:string ms))
-         (map-indexed (fn [i s] (new-string s (assoc m :line (inc i))))))))
+         (map-indexed (fn [i s] (new-string s (assoc m ::line (inc i))))))))
 
 (defn blank?
   [ms]
