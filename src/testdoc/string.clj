@@ -11,6 +11,7 @@
 (defn new-string
   ([string] (new-string string {}))
   ([string metadata]
+   ;; NOTE: Babashka adds `:line` metadata automatically
    (with-meta {:string string} metadata)))
 
 (defn to-str
@@ -25,6 +26,7 @@
   [ms]
   (let [m (meta ms)]
     (->> (str/split-lines (:string ms))
+         ;; NOTE: Babashka adds `:line` metadata automatically
          (map-indexed (fn [i s] (new-string s (assoc m ::line (inc i))))))))
 
 (defn blank?
