@@ -6,12 +6,8 @@ lint:
 	clj-kondo --lint src:test
 	cljstyle check
 
-bb:
-	curl -s https://raw.githubusercontent.com/borkdude/babashka/master/install -o .install-babashka
-	bash ./.install-babashka $(PWD)
-
 test-bb: bb
-	./bb --classpath "src:test" -m bb-test-runner
+	docker run --rm -v $(PWD):/tmp -w /tmp uochan/babashka-test 'src' 'test' '_test.clj$$'
 
 test:
 	lein test-all
