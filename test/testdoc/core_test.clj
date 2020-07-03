@@ -111,6 +111,11 @@
                   =>          3)
                   5")))
 
+(t/deftest nil-value-test
+  (t/is (= [{:type :fail :message "(= 1 nil)" :expected nil :actual 1}]
+           (sut/testdoc nil "=> 1
+                             nil"))))
+
 (t/deftest debug-test
   (with-out-str
     (t/is (testdoc #'sut/debug))))

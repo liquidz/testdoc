@@ -24,9 +24,10 @@
 
 (defn- get-message
   [form original-expected is-expected-fn?]
-  (if is-expected-fn?
-    (str "(true? (" original-expected " " form "))")
-    (str "(= " form " " original-expected ")")))
+  (cond
+    is-expected-fn?  (str "(true? (" original-expected " " form "))")
+    (nil? original-expected) (str "(= " form " nil)")
+    :else (str "(= " form " " original-expected ")")))
 
 (defn testdoc*
   [msg doc publics]
