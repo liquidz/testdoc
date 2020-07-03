@@ -116,6 +116,15 @@
            (sut/testdoc nil "=> 1
                              nil"))))
 
+(t/deftest unresolved-symbol-test
+  (let [[err :as res] (sut/testdoc nil "
+                                        => (unresolved-fn 10)
+                                        11")]
+    (t/is (= 1 (count res)))
+    (t/is (= :fail (:type err)))
+    (t/is (every? #(some? (get err %)) [:type :message :expected :actual]))
+    (t/is (= "(= (unresolved-fn 10) 11), [line: 2]" (:message err)))))
+
 (t/deftest debug-test
   (with-out-str
     (t/is (testdoc #'sut/debug))))

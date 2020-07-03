@@ -29,15 +29,22 @@
     (nil? original-expected) (str "(= " form " nil)")
     :else (str "(= " form " " original-expected ")")))
 
+(defn- try-eval
+  [form]
+  (try
+    (eval form)
+    (catch Throwable ex
+      ex)))
+
 (defn testdoc*
   [msg doc publics]
   (let [tests (parse-doc doc)
         last-actual (atom nil)]
     (reduce (fn [result [form original-expected :as test]]
               (let [publics (assoc publics '*1 @last-actual)
-                    actual (-> form (replace-publics publics) eval)
+                    actual (-> form (replace-publics publics) try-eval)
                     _ (reset! last-actual actual)
-                    expected (-> original-expected (replace-publics publics) eval)
+                    expected (-> original-expected (replace-publics publics) try-eval)
                     is-expected-fn? (fn?' expected)
                     pass? (if is-expected-fn?
                             (expected actual)
