@@ -77,6 +77,24 @@ This document is tested by this library, of course!
 ;; => nil
 ```
 
+## Test error
+
+testdoc will add a line number information to a error message text.
+
+For example, you have a test code like below:
+```clojure
+(t/deftest error-test
+  (t/is (testdoc "
+                  => (unresolved-symbol)
+                  :failure")))
+```
+
+Then, `lein test` will show you errors like below:
+
+```
+(= (unresolved-symbol) :failure), [line: 2]
+```
+
 ## Other works
 * [drojas/doctest](https://github.com/drojas/doctest)
 * [Kobold/clj-doc-test](https://github.com/Kobold/clj-doc-test/)
