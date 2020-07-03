@@ -6,7 +6,7 @@ lint:
 	clj-kondo --lint src:test
 	cljstyle check
 
-test-bb: bb
+test-bb:
 	docker run --rm -v $(PWD):/tmp -w /tmp uochan/babashka-test 'src' 'test' '_test.clj$$'
 
 test:
