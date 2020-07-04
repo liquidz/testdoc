@@ -84,15 +84,14 @@ testdoc will add a line number information to a error message text.
 For example, you have a test code like below:
 ```clojure
 (t/deftest error-test
-  (t/is (testdoc "
-                  => (unresolved-symbol)
+  (t/is (testdoc "=> (unresolved-symbol)
                   :failure")))
 ```
 
 Then, `lein test` will show you errors like below:
 
 ```
-(= (unresolved-symbol) :failure), [line: 2]
+(= (unresolved-symbol) :failure), [line: 1]
 ```
 
 ## Other works
