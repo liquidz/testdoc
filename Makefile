@@ -1,4 +1,4 @@
-.PHONY: lint test
+.PHONY: lint test-bb test test-all outdated clean
 
 PWD=$(shell pwd)
 
@@ -13,6 +13,9 @@ test:
 	lein test-all
 
 test-all: test test-bb
+
+outdated:
+	lein with-profile antq run -m antq.core
 
 clean:
 	rm -rf bb

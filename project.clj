@@ -8,7 +8,8 @@
   {:1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
    :1.10 {:dependencies [[org.clojure/clojure "1.10.0"]]}
    :1.10.1 {:dependencies [[org.clojure/clojure "1.10.1"]]}
-   :dev {:dependencies [[org.clojure/clojure "1.10.1"]]}}
+   :dev {:dependencies [[org.clojure/clojure "1.10.1"]]}
+   :antq {:dependencies [[antq "RELEASE"]]}}
 
   :aliases
   {"test-all" ["with-profile" "1.9:1.10:1.10.1" "test"]})
