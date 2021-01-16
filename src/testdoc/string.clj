@@ -65,3 +65,8 @@
   ([ms start end]
    (new-string (clojure.core/subs (:string ms) start end)
                (meta ms))))
+
+(defn calc-level
+  [ms]
+  (- (count (filter #{\(} (seq ms)))
+     (count (filter #{\)} (seq ms)))))

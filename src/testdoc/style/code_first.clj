@@ -8,11 +8,6 @@
   [s]
   (some? (str/re-seq output-line-re s)))
 
-(defn- calc-level
-  [s]
-  (- (count (filter #{\(} (str/seq s)))
-     (count (filter #{\)} (str/seq s)))))
-
 (defn- join-forms
   [lines]
   (:result
@@ -26,7 +21,7 @@
           (assoc m :tmp [expected] :level 0))
 
         (seq tmp)
-        (let [next-level (+ level (calc-level line))
+        (let [next-level (+ level (str/calc-level line))
               [expected & codes :as tmp] (conj tmp line)]
           (if (= 0 next-level)
             (assoc m :tmp [] :level 0 :result (conj result
