@@ -16,7 +16,8 @@
     '[[a b] [c d]], ["a" ";; => b" "c" ";; => d"]
     '[],            ["a"]
     '[[a b]],       ["a" ";; => b" "c"]
-    '[[a b]],       ["a" ";; => b" ";; => c"]))
+    '[[a b]],       ["a" ";; => b" ";; => c"]
+    '[[a (b c)]],   ["a" ";; => [b" ";; => c]"]))
 
 (t/deftest parse-doc-with-meta-test
   (let [ret (sut/parse-doc (lines ["" "a" ";; => 6" "c" ";; => :d"]))]

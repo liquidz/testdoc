@@ -17,7 +17,9 @@
         (and (or (empty? tmp)
                  (= 1 (count tmp)))
              (output-line? line))
-        (let [expected (str/trim (str/replace line output-line-re ""))]
+        (let [expected (or (first tmp) (str/new-string "" {}))
+              expected (str/trim (str/join "\n" [(str/replace line output-line-re "")
+                                                 expected]))]
           (assoc m :tmp [expected] :level 0))
 
         (seq tmp)
