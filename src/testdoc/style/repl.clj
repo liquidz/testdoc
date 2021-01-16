@@ -14,21 +14,34 @@
     (:result
      (reduce (fn [{:keys [tmp result] :as m} line]
                (cond
+                 ;; code
                  (form-line? line)
-                 (assoc m :tmp (str/trim (str/join "\n" [tmp (str/trim (str/subs line n))])))
+                 (let [m (cond-> m
+                           (= 2 (count tmp))
+                           (assoc :tmp [] :result (conj result (first tmp) (second tmp))))
+                       code (or (first (:tmp m)) (str/new-string ""))
+                       code (str/trim (str/join "\n" [code (str/trim (str/subs line n))]))]
+                   (assoc m :tmp [code]))
 
-                 (str/seq tmp)
-                 (assoc m :tmp (str/new-string "") :result (conj result tmp line))
+                 ;; expected
+                 (and (str/seq line)
+                      (seq tmp))
+                 (let [[code & expected] (conj tmp line)]
+                   (assoc m :tmp [code (str/join "\n" expected)]))
 
-                 :else m))
-             {:tmp (str/new-string "") :result []} lines))))
+                 :else
+                 (if (= 2 (count tmp))
+                   (assoc m :tmp [] :result (conj result (first tmp) (second tmp)))
+                   (assoc m :tmp []))))
+             {:tmp [] :result []}
+             lines))))
 
 (defn parse-doc
   [doc]
   (-> (str/new-string doc)
       (str/split-lines)
+      (concat [(str/new-string "")]) ;; terminator
       (->> (map str/trim)
-           (remove str/blank?)
            (drop-while (complement form-line?))
            (join-forms)
            (map #(let [x (-> % str/trim str/to-str read-string)]
