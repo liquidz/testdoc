@@ -36,6 +36,11 @@ var?
 
 => (t/test-var *1)
 nil
+
+;; Other examples
+=> (hash-map :multiple "lines")
+{:multiple
+ "lines"}
 ```
 
 ### Code-first style
@@ -59,6 +64,11 @@ nil
 
 (t/test-var *1)
 ;; => nil
+
+;; Other examples
+(hash-map :multiple "lines")
+;; => {:multiple
+;; =>  "lines"}
 ```
 
 ### Testing external documents

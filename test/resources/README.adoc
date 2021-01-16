@@ -1,7 +1,25 @@
 = External document
 
+repl style
 [source,clojure]
 ----
 => (+ 1 2 3)
 6
+
+=> (concat [1 2]
+=>         [3 4])
+[1 2 3
+ 4]
+----
+
+code first style
+[source,clojure]
+----
+(+ 1 2 3 4)
+;; => 10
+
+(concat [1 2 3]
+        [4 5 6])
+;; => [1 2 3 4
+;; =>  5 6]
 ----
