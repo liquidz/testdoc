@@ -15,7 +15,7 @@ test:
 test-all: test test-bb
 
 outdated:
-	lein with-profile antq run -m antq.core
+	lein with-profile antq run -m antq.core --upgrade
 
 clean:
 	rm -rf bb
