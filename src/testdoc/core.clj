@@ -69,7 +69,10 @@
      (assoc accm k
             (if (:private (meta v))
               ;; NOTE: Convert to be able to evaluate private symbols in `eval`
-              `(var ~(symbol v))
+              ;;       (symbol v) does not work with Clojure 1.9
+              `(var ~(-> (str v)
+                         (subs 2)
+                         (symbol)))
               v)))
    {}
    (ns-interns ns-sym)))
