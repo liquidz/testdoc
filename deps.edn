@@ -1,9 +1,14 @@
-{:paths ["src" "resources"]
+{:mvn/repos {"sonatype" {:url "https://oss.sonatype.org/content/repositories/snapshots/"}}
+
+ :paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
 
  :aliases
  {:dev {:extra-deps {lambdaisland/kaocha {:mvn/version "1.60.972"}}}
   :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
+  ;; cf. https://clojure.org/releases/downloads#_clojure_source
+  :master {:override-deps {org.clojure/clojure {:mvn/version "1.11.1-master-SNAPSHOT"}}}
+
   :test {:main-opts ["-m" "kaocha.runner"]}
 
   :build {:deps {io.github.clojure/tools.build {:git/tag "v0.7.4" :git/sha "f7fc16b"}

@@ -23,6 +23,7 @@ test-bb:
 test:
 	clojure -M:dev:test
 	clojure -M:dev:1.9:test
+	clojure -M:dev:master:test
 
 .PHONY: test-all
 test-all: test test-bb
