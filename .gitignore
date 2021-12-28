@@ -5,10 +5,10 @@ pom.xml
 pom.xml.asc
 *.jar
 *.class
-/.lein-*
 /.nrepl-port
 .hgignore
 .hg/
 .clj-kondo
 .install-babashka
 bb
+.cpcache
