@@ -2,7 +2,14 @@
 
 PWD=$(shell pwd)
 
-lint:
+.clj-kondo/com.github.liquidz/testdoc/config.edn: resources/clj-kondo.exports/com.github.liquidz/testdoc/config.edn
+	@rm -rf .clj-kondo/.cache
+	@clj-kondo --copy-configs --dependencies --lint "$(shell clojure -A:dev -Spath)"
+.PHONY: update-clj-kondo-config
+update-clj-kondo-config: .clj-kondo/com.github.liquidz/testdoc/config.edn
+
+.PHONY: lint
+lint: update-clj-kondo-config
 	clj-kondo --lint src:test
 	cljstyle check
 
