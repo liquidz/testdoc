@@ -36,5 +36,8 @@ jobs:
           restore-keys: |
             clj-cache-
 
-      - run: make release
-
+      - name: Release
+        run: make release
+        env:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+          CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
