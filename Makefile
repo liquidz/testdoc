@@ -48,6 +48,10 @@ install: clean
 deploy: clean
 	clojure -T:build deploy
 
+.PHONY: release
+deploy: release
+	clojure -T:build release
+
 .PHONY: clean
 clean:
 	\rm -rf .cpcache target

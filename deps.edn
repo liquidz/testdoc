@@ -12,6 +12,7 @@
   :test {:main-opts ["-m" "kaocha.runner"]}
 
   :build {:deps {io.github.clojure/tools.build {:git/tag "v0.7.4" :git/sha "f7fc16b"}
+                 io.forward/semver {:mvn/version "0.1.0"}
                  slipset/deps-deploy {:mvn/version "RELEASE"}}
           :ns-default build}
 
