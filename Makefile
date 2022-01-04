@@ -49,7 +49,7 @@ deploy: clean
 	clojure -T:build deploy
 
 .PHONY: release
-deploy: release
+release:
 	clojure -T:build release
 
 .PHONY: clean
