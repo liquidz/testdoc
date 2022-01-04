@@ -40,7 +40,7 @@
   [doc]
   (-> (str/new-string doc)
       (str/split-lines)
-      (concat [(str/new-string "")]) ;; terminator
+      (concat [(str/new-string "")]) ; terminator
       (->> (map str/trim)
            (drop-while (complement form-line?))
            (join-forms)

@@ -1,8 +1,13 @@
-name: test
-on: [push]
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Please input any text for confirmation'
+        required: true
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,6 +23,11 @@ jobs:
         with:
           cli: latest
 
+      - name: Show versions
+        run: |
+          java -version
+          clojure --version
+
       - uses: actions/cache@v2
         with:
           path: |
@@ -25,4 +35,6 @@ jobs:
           key: clj-cache-${{ hashFiles('**/deps.edn') }}
           restore-keys: |
             clj-cache-
-      - run: make test-all
+
+      - run: make release
+

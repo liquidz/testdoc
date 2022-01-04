@@ -15,11 +15,11 @@
   (concat (style.repl/parse-doc doc)
           (style.code-first/parse-doc doc)))
 
-(defn- replace-publics
-  [x publics]
+(defn- replace-interns
+  [x interns]
   (cond
-    (symbol? x) (get publics x x)
-    (sequential? x) (walk/postwalk-replace publics x)
+    (symbol? x) (get interns x x)
+    (sequential? x) (walk/postwalk-replace interns x)
     :else x))
 
 (defn- get-message
@@ -37,14 +37,18 @@
       ex)))
 
 (defn testdoc*
-  [msg doc publics]
+  [msg doc interns]
   (let [tests (parse-doc doc)
         last-actual (atom nil)]
     (reduce (fn [result [form original-expected :as test]]
-              (let [publics (assoc publics '*1 @last-actual)
-                    actual (-> form (replace-publics publics) try-eval)
+              (let [interns (assoc interns '*1 @last-actual)
+                    actual (-> form
+                               (replace-interns interns)
+                               (try-eval))
                     _ (reset! last-actual actual)
-                    expected (-> original-expected (replace-publics publics) try-eval)
+                    expected (-> original-expected
+                                 (replace-interns interns)
+                                 try-eval)
                     is-expected-fn? (fn?' expected)
                     pass? (if is-expected-fn?
                             (expected actual)
@@ -58,13 +62,27 @@
                        :actual actual})))
             [] tests)))
 
+(defn- ns-interns*
+  [ns-sym]
+  (reduce-kv
+   (fn [accm k v]
+     (assoc accm k
+            (if (:private (meta v))
+              ;; NOTE: Convert to be able to evaluate private symbols in `eval`
+              ;;       (symbol v) does not work with Clojure 1.9
+              `(var ~(-> (str v)
+                         (subs 2)
+                         (symbol)))
+              v)))
+   {}
+   (ns-interns ns-sym)))
+
 (defn extract-document
   [x]
   (cond
     (var? x)
-    (let [{ns' :ns doc :doc} (meta x)
-          publics (ns-publics ns')]
-      [doc publics])
+    (let [{ns' :ns doc :doc} (meta x)]
+      [doc (ns-interns* ns')])
 
     (string? x)
     [x {}]
@@ -74,11 +92,11 @@
 
 (defn testdoc
   [msg x]
-  (if-let [[doc publics] (extract-document x)]
+  (if-let [[doc interns] (extract-document x)]
     (if (str/blank? doc)
       [{:type :fail
         :message (format "No document: %s" x)}]
-      (testdoc* msg doc publics))
+      (testdoc* msg doc interns))
     [{:type :fail
       :message (format "Unsupported document: %s" x)}]))
 

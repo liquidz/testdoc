@@ -99,8 +99,21 @@
   [a b]
   (+ a b))
 
+(defn- private-plus
+  "(private-plus 2 3)
+  ;; => 5
+
+  (private-plus 3
+                4)
+  ;; => 7"
+  [a b]
+  (+ a b))
+
 (t/deftest plus-test
   (t/is (testdoc #'plus)))
+
+(t/deftest private-plus-test
+  (t/is (testdoc #'private-plus)))
 
 (t/deftest plus-string-test
   (t/is (testdoc "=> (require '[testdoc.core-test :as ct])

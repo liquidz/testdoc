@@ -3,10 +3,10 @@
   (:require
    [clojure.string :as str]))
 
-;; NOTE: Babashka does not support `defrecord` yet
-; (defrecord MetaString [string]
-;   Object
-;   (toString [_] string))
+;; NOTE: Babashka does not support metadata for records yet
+;; (defrecord MetaString [string]
+;;   Object
+;;   (toString [_] string))
 
 (defn new-string
   ([string] (new-string string {}))
