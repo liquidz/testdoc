@@ -110,7 +110,7 @@ Then, `lein test` will show you errors like below:
 
 ## License
 
-Copyright © 2018-2020 [Masashi Iizuka](https://twitter.com/uochan)
+Copyright © 2018-2022 [Masashi Iizuka](https://twitter.com/uochan)
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
