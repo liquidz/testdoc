@@ -58,6 +58,12 @@
   (deploy/deploy {:artifact jar-file
                   :installer :remote}))
 
+(defn- sh*
+  [& args]
+  (println ";;" args)
+  (let [{:keys [out]} (apply sh/sh args)]
+    (println out)))
+
 (defn release
   [{:as arg :keys [main-branch]}]
   (let [release-version (get-current-version pom-file)
@@ -66,12 +72,12 @@
         main-branch (or main-branch "main")]
     (println "Start to release v" release-version)
     (pom {:version release-version})
-    (sh/sh "git" "commit" "-a" "-m" (str "Release v" release-version " [skip ci]"))
-    (sh/sh "git" "push" "origin" main-branch)
-    (sh/sh "git" "tag" "-a" release-version)
-    (sh/sh "git" "push" "--tags" "origin")
+    (sh* "git" "commit" "-a" "-m" (str "Release v" release-version " [skip ci]"))
+    (sh* "git" "push" "origin" main-branch)
+    (sh* "git" "tag" "-a" release-version "-m" release-version)
+    (sh* "git" "push" "--tags" "origin")
     (deploy arg)
 
     (pom {:version next-dev-version})
-    (sh/sh "git" "commit" "-a" "-m" (str "Prepare for next development iteration [skip ci]"))
-    (sh/sh "git" "push" "origin" main-branch)))
+    (sh* "git" "commit" "-a" "-m" (str "Prepare for next development iteration [skip ci]"))
+    (sh* "git" "push" "origin" main-branch)))
