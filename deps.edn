@@ -4,14 +4,14 @@
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
 
  :aliases
- {:dev {:extra-deps {lambdaisland/kaocha {:mvn/version "1.60.972"}}}
+ {:dev {:extra-deps {lambdaisland/kaocha {:mvn/version "1.63.998"}}}
   :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
   ;; cf. https://clojure.org/releases/downloads#_clojure_source
   :master {:override-deps {org.clojure/clojure {:mvn/version "1.11.1-master-SNAPSHOT"}}}
 
   :test {:main-opts ["-m" "kaocha.runner"]}
 
-  :build {:deps {io.github.clojure/tools.build {:git/tag "v0.7.4" :git/sha "f7fc16b"}
+  :build {:deps {io.github.clojure/tools.build {:git/tag "v0.8.0" :git/sha "e3e3532"}
                  io.forward/semver {:mvn/version "0.1.0"}
                  slipset/deps-deploy {:mvn/version "RELEASE"}}
           :ns-default build}
