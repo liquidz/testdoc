@@ -42,6 +42,10 @@
       <id>clojars</id>
       <url>https://repo.clojars.org/</url>
     </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
   </repositories>
   <dependencyManagement>
     <dependencies/>
@@ -50,7 +54,7 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.10.3</version>
+      <version>1.11.1</version>
     </dependency>
   </dependencies>
 </project>
