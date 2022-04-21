@@ -103,6 +103,17 @@ Then, `lein test` will show you errors like below:
 (= (unresolved-symbol) :failure), [line: 1]
 ```
 
+## clj-kondo
+
+When you see `Unresolved symbol: testdoc` error with [clj-kondo](https://github.com/clj-kondo/clj-kondo),
+you can import a config file for this library by the following command.
+
+```sh
+clj-kondo --copy-configs --dependencies --lint "$(shell clojure -A:dev -Spath)"
+# .clj-kondo/com.github.liquidz/testdoc/config.edn should be created
+```
+
+
 ## Other works
 * [drojas/doctest](https://github.com/drojas/doctest)
 * [Kobold/clj-doc-test](https://github.com/Kobold/clj-doc-test/)
