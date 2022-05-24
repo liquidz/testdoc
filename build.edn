@@ -1,5 +1,5 @@
 {:lib com.github.liquidz/testdoc
- :version "1.5.{{commit-count}}"
+ :version "1.5.{{git/commit-count}}"
  :scm {:connection "scm:git:git://github.com/liquidz/testdoc.git"
        :developerConnection "scm:git:ssh://git@github.com/liquidz/testdoc.git"
        :url "https://github.com/liquidz/testdoc"}
