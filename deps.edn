@@ -4,7 +4,7 @@
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
 
  :aliases
- {:dev {:extra-deps {lambdaisland/kaocha {:mvn/version "1.65.1029"}}}
+ {:dev {:extra-deps {lambdaisland/kaocha {:mvn/version "1.70.1086"}}}
   :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
   :1.10 {:override-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}
   ;; cf. https://clojure.org/releases/downloads#_clojure_source
@@ -12,7 +12,7 @@
 
   :test {:main-opts ["-m" "kaocha.runner"]}
 
-  :build {:deps {com.github.liquidz/build.edn {:git/tag "0.2.63" :git/sha "f4e571d"}}
+  :build {:deps {com.github.liquidz/build.edn {:git/tag "0.8.162" :git/sha "799b47e"}}
           :ns-default build-edn.main}
 
   :outdated {:replace-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
