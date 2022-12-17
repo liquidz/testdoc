@@ -10,30 +10,35 @@
 
 (defn- join-forms
   [lines]
-  (:result
-   (reduce
-    (fn [{:keys [tmp result level] :as m} line]
-      (cond
-        (and (or (empty? tmp)
-                 (= 1 (count tmp)))
-             (output-line? line))
-        (let [expected (or (first tmp) (str/new-string "" {}))
-              expected (str/trim (str/join "\n" [(str/replace line output-line-re "")
-                                                 expected]))]
-          (assoc m :tmp [expected] :level 0))
+  (let [res (reduce
+             (fn [{:keys [tmp result level] :as m} line]
+               (cond
+                 (and (or (empty? tmp)
+                          (= 1 (count tmp)))
+                      (output-line? line))
+                 (let [expected (or (first tmp) (str/new-string "" {}))
+                       expected (str/trim (str/join "\n" [(str/replace line output-line-re "")
+                                                          expected]))]
+                   (assoc m :tmp [expected] :level 0))
 
-        (seq tmp)
-        (let [next-level (+ level (str/calc-level line))
-              [expected & codes :as tmp] (conj tmp line)]
-          (if (= 0 next-level)
-            (assoc m :tmp [] :level 0 :result (conj result
-                                                    (str/join "\n" (reverse codes))
-                                                    expected))
-            (assoc m :tmp tmp :level next-level)))
+                 (seq tmp)
+                 (let [next-level (+ level (str/calc-level line))
+                       [expected & codes :as tmp] (conj tmp line)]
+                   (if (= 0 next-level)
+                     (assoc m :tmp [] :level 0 :result (conj result
+                                                             (str/join "\n" (reverse codes))
+                                                             expected))
+                     (assoc m :tmp tmp :level next-level)))
 
-        :else m))
-    {:tmp [] :result [] :level 0}
-    (reverse lines))))
+                 :else m))
+             {:tmp [] :result [] :level 0}
+             (reverse lines))
+        {:keys [level result]} res]
+    (when (neg? level)
+      (throw (ex-info "Unmatched parentheses: too many closing parentheses" {:lines lines})))
+    (when (pos? level)
+      (throw (ex-info "Unmatched parentheses: too few closing parentheses" {:lines lines})))
+    result))
 
 (defn parse-doc
   [doc]
