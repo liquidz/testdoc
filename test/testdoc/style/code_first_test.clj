@@ -19,6 +19,12 @@
     '[[a b]],       ["a" ";; => b" ";; => c"]
     '[[a (b c)]],   ["a" ";; => [b" ";; => c]"]))
 
+(t/deftest parse-doc-unmatch-paren-test
+  (t/is (thrown-with-msg? Exception #"Unmatched parentheses"
+          (sut/parse-doc (lines ["(inc 1))" ";; => 2"]))))
+  (t/is (thrown-with-msg? Exception #"Unmatched parentheses"
+          (sut/parse-doc (lines ["(inc 1" ";; => 2"])))))
+
 (t/deftest parse-doc-with-meta-test
   (let [ret (sut/parse-doc (lines ["" "a" ";; => 6" "c" ";; => :d"]))]
     (t/is (= '[[a 6] [c :d]] ret))

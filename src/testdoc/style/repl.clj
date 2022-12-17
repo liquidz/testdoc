@@ -10,31 +10,39 @@
 
 (defn- join-forms
   [lines]
-  (let [n (count form-line-str)]
-    (:result
-     (reduce (fn [{:keys [tmp result] :as m} line]
-               (cond
-                 ;; code
-                 (form-line? line)
-                 (let [m (cond-> m
-                           (= 2 (count tmp))
-                           (assoc :tmp [] :result (conj result (first tmp) (second tmp))))
-                       code (or (first (:tmp m)) (str/new-string ""))
-                       code (str/trim (str/join "\n" [code (str/trim (str/subs line n))]))]
-                   (assoc m :tmp [code]))
+  (let [n (count form-line-str)
+        res (reduce (fn [{:keys [tmp result] :as m} line]
+                      (cond
+                        ;; code
+                        (form-line? line)
+                        (let [m (cond-> m
+                                  (= 2 (count tmp))
+                                  (assoc :tmp [] :result (conj result (first tmp) (second tmp))))
+                              code (or (first (:tmp m)) (str/new-string ""))
+                              code (str/trim (str/join "\n" [code (str/trim (str/subs line n))]))]
+                          (assoc m :tmp [code]))
 
-                 ;; expected
-                 (and (str/seq line)
-                      (seq tmp))
-                 (let [[code & expected] (conj tmp line)]
-                   (assoc m :tmp [code (str/join "\n" expected)]))
+                        ;; expected
+                        (and (str/seq line)
+                             (seq tmp))
+                        (let [[code & expected] (conj tmp line)]
+                          (assoc m :tmp [code (str/join "\n" expected)]))
 
-                 :else
-                 (if (= 2 (count tmp))
-                   (assoc m :tmp [] :result (conj result (first tmp) (second tmp)))
-                   (assoc m :tmp []))))
-             {:tmp [] :result []}
-             lines))))
+                        :else
+                        (if (= 2 (count tmp))
+                          (assoc m :tmp [] :result (conj result (first tmp) (second tmp)))
+                          (assoc m :tmp []))))
+                    {:tmp [] :result []}
+                    lines)
+        {:keys [result]} res
+        level (->> result
+                   (map str/calc-level)
+                   (apply +))]
+    (when (neg? level)
+      (throw (ex-info "Unmatched parentheses: too many closing parentheses" {:lines lines})))
+    (when (pos? level)
+      (throw (ex-info "Unmatched parentheses: too few closing parentheses" {:lines lines})))
+    result))
 
 (defn parse-doc
   [doc]
